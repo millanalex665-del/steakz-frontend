@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import MenuPage from './pages/MenuPage';
 import AdminPage from './pages/AdminPage';
 import HQPage from './pages/HQPage';
 import BranchManagerPage from './pages/BranchManagerPage';
@@ -15,7 +17,8 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/menu" element={<MenuPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/admin" element={
             <ProtectedRoute allowedRoles={['ADMIN']}><AdminPage /></ProtectedRoute>
