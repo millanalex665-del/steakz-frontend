@@ -5,9 +5,9 @@ import { useAuth } from '../context/AuthContext';
 
 const ROLE_ROUTES: Record<string, string> = {
   ADMIN: '/admin', HQ_MANAGER: '/hq', BRANCH_MANAGER: '/branch',
-  CHEF: '/chef', CASHIER: '/cashier', WAITER: '/waiter'
+  CHEF: '/chef', CASHIER: '/cashier', WAITER: '/waiter',
+  CUSTOMER: '/customer', DELIVERY: '/delivery'
 };
-
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -72,9 +72,14 @@ export default function LoginPage() {
           </form>
 
           <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid #c4c7c7' }}>
-            <Link to="/menu" style={{ fontSize: 13, color: '#af2b3e', fontWeight: 600, textDecoration: 'none' }}>
-              Browse menu without signing in →
-            </Link>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+  <Link to="/menu" style={{ fontSize: 13, color: '#af2b3e', fontWeight: 600, textDecoration: 'none' }}>
+    Browse menu without signing in →
+  </Link>
+  <Link to="/register" style={{ fontSize: 13, color: '#444748', textDecoration: 'none' }}>
+    New customer? Create an account →
+  </Link>
+</div>
           </div>
         </div>
       </div>

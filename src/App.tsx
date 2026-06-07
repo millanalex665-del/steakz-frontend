@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import CustomerPage from './pages/CustomerPage';
+import DeliveryPage from './pages/DeliveryPage';
+import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import MenuPage from './pages/MenuPage';
 import AdminPage from './pages/AdminPage';
@@ -20,6 +23,13 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+<Route path="/customer" element={
+  <ProtectedRoute allowedRoles={['CUSTOMER']}><CustomerPage /></ProtectedRoute>
+} />
+<Route path="/delivery" element={
+  <ProtectedRoute allowedRoles={['DELIVERY']}><DeliveryPage /></ProtectedRoute>
+} />
           <Route path="/admin" element={
             <ProtectedRoute allowedRoles={['ADMIN']}><AdminPage /></ProtectedRoute>
           } />

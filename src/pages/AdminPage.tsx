@@ -51,6 +51,13 @@ export default function AdminPage() {
     await api.patch(`/api/admin/users/${id}/${active ? 'deactivate' : 'activate'}`); void load();
   }
 
+  async function deleteUser(id: number) {
+    if (!confirm('Are you sure you want to permanently delete this user?')) return;
+    await api.delete(`/api/admin/users/${id}`);
+    setMsg('✅ User deleted.');
+    void load();
+  }
+
   const inp = { display: 'block' as const, width: '100%', padding: '9px 12px', margin: '6px 0 14px', border: '1px solid #c4c7c7', borderRadius: 4, fontFamily: 'Hanken Grotesk', fontSize: 14 };
   const lbl = { fontSize: 12, fontWeight: 700 as const, color: '#444748', textTransform: 'uppercase' as const, letterSpacing: '0.05em', display: 'block' as const };
 
@@ -109,7 +116,7 @@ export default function AdminPage() {
                 <input style={inp} type="password" value={uPass} onChange={e => setUPass(e.target.value)} required placeholder="••••••••" />
                 <label style={lbl}>Role</label>
                 <select style={inp} value={uRole} onChange={e => setURole(e.target.value)}>
-                  {['HQ_MANAGER', 'BRANCH_MANAGER', 'CHEF', 'CASHIER', 'WAITER'].map(r => <option key={r} value={r}>{r}</option>)}
+                  {['HQ_MANAGER', 'BRANCH_MANAGER', 'CHEF', 'CASHIER', 'WAITER', 'CUSTOMER', 'DELIVERY'].map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
                 <label style={lbl}>Branch</label>
                 <select style={inp} value={uBranch} onChange={e => setUBranch(e.target.value)}>
@@ -125,35 +132,42 @@ export default function AdminPage() {
               <div style={{ padding: '16px 20px', borderBottom: '1px solid #c4c7c7' }}>
                 <h3 style={{ fontFamily: 'Libre Caslon Text, serif', fontSize: 20, fontWeight: 600, margin: 0 }}>All Users ({users.length})</h3>
               </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Hanken Grotesk', fontSize: 14 }}>
-                <thead>
-                  <tr style={{ background: '#000', color: '#fff' }}>
-                    {['Name', 'Email', 'Role', 'Branch', 'Status', 'Action'].map(h => (
-                      <th key={h} style={{ textAlign: 'left', padding: '12px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((u, i) => (
-                    <tr key={u.id} style={{ borderBottom: '1px solid #c4c7c7', background: i % 2 === 0 ? '#fff' : '#f5f3f3' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 600 }}>{u.name}</td>
-                      <td style={{ padding: '12px 16px', color: '#444748', fontSize: 13 }}>{u.email}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ background: (ROLE_COLORS[u.role] ?? '#555') + '15', color: ROLE_COLORS[u.role] ?? '#555', padding: '3px 8px', borderRadius: 2, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>{u.role}</span>
-                      </td>
-                      <td style={{ padding: '12px 16px', color: '#444748', fontSize: 13 }}>{u.branchId ?? '—'}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ color: u.isActive ? '#15803d' : '#af2b3e', fontWeight: 600, fontSize: 13 }}>{u.isActive ? '● Active' : '○ Inactive'}</span>
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <button onClick={() => { void toggleUser(u.id, u.isActive); }} style={{ background: 'transparent', color: u.isActive ? '#af2b3e' : '#15803d', border: `1px solid ${u.isActive ? '#af2b3e' : '#15803d'}`, padding: '4px 12px', cursor: 'pointer', fontFamily: 'Hanken Grotesk', fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
-                          {u.isActive ? 'DEACTIVATE' : 'ACTIVATE'}
-                        </button>
-                      </td>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Hanken Grotesk', fontSize: 14 }}>
+                  <thead>
+                    <tr style={{ background: '#000', color: '#fff' }}>
+                      {['Name', 'Email', 'Role', 'Branch', 'Status', 'Actions'].map(h => (
+                        <th key={h} style={{ textAlign: 'left', padding: '12px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{h}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {users.map((u, i) => (
+                      <tr key={u.id} style={{ borderBottom: '1px solid #c4c7c7', background: i % 2 === 0 ? '#fff' : '#f5f3f3' }}>
+                        <td style={{ padding: '12px 16px', fontWeight: 600 }}>{u.name}</td>
+                        <td style={{ padding: '12px 16px', color: '#444748', fontSize: 13 }}>{u.email}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ background: (ROLE_COLORS[u.role] ?? '#555') + '15', color: ROLE_COLORS[u.role] ?? '#555', padding: '3px 8px', borderRadius: 2, fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>{u.role}</span>
+                        </td>
+                        <td style={{ padding: '12px 16px', color: '#444748', fontSize: 13 }}>{u.branchId ?? '—'}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ color: u.isActive ? '#15803d' : '#af2b3e', fontWeight: 600, fontSize: 13 }}>{u.isActive ? '● Active' : '○ Inactive'}</span>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button onClick={() => { void toggleUser(u.id, u.isActive); }} style={{ background: 'transparent', color: u.isActive ? '#af2b3e' : '#15803d', border: `1px solid ${u.isActive ? '#af2b3e' : '#15803d'}`, padding: '4px 10px', cursor: 'pointer', fontFamily: 'Hanken Grotesk', fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
+                              {u.isActive ? 'DEACTIVATE' : 'ACTIVATE'}
+                            </button>
+                            <button onClick={() => { void deleteUser(u.id); }} style={{ background: '#ba1a1a', color: '#fff', border: 'none', padding: '4px 10px', cursor: 'pointer', fontFamily: 'Hanken Grotesk', fontSize: 11, fontWeight: 700, letterSpacing: '0.05em' }}>
+                              DELETE
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
