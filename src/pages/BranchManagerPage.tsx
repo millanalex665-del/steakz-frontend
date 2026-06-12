@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
 interface Order { id: number; status: string; totalAmount: string; table: { tableNumber: number }; waiter: { name: string }; createdAt: string }
-interface DashData { todayOrders: number; todayRevenue: number; activeStaff: number }
+interface DashData { todayOrders: number; todayRevenue: number; activeStaff: number; branchName: string }
 
 const STATUS_COLORS: Record<string,string> = { PENDING:'#c2410c', PREPARING:'#1d4ed8', READY:'#15803d', SERVED:'#6b21a8', PAID:'#444748', CANCELLED:'#af2b3e' };
 
@@ -56,7 +56,7 @@ export default function BranchManagerPage() {
           <h1 style={{ fontFamily: 'Libre Caslon Text, serif', fontSize: 28, fontWeight: 600, margin: 0 }}>Branch Dashboard</h1>
         </div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div style={{ background: '#e9e8e7', padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 700, color: '#444748' }}>YOUR BRANCH ONLY</div>
+          <div style={{ background: '#e9e8e7', padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 700, color: '#444748' }}>{dash?.branchName ?? ''} — YOUR BRANCH ONLY</div>
           <button onClick={() => { logout(); navigate('/login'); }} style={{ background: '#000', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 4, fontFamily: 'Hanken Grotesk', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>LOGOUT</button>
         </div>
       </header>
